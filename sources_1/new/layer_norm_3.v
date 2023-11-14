@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 2023/11/12 10:17:56
+// Create Date: 2023/11/13 14:59:41
 // Design Name: 
-// Module Name: binary_intermediate_1
+// Module Name: layer_norm_3
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,29 +20,28 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module binary_intermediate_1(
-    input clk,
+module layer_norm_3(
+	input clk,
     input rst_n,
     
     input [16-1:0] data_in,
 	input data_in_valid,
-	input wire [2-1:0] block_sel,
+	input [2:0] block_sel,
 	
-	output reg [64-1:0] data_out,
+	output [16-1:0] data_out,
 	output reg data_out_valid,
 	output reg done
     );
 	
     reg [4:0] time_step_pre;
-    reg [4:0] time_step; // 添加�?个寄存器用于延迟
+    reg [4:0] time_step; // 添加一个寄存器用于延迟
 	
     always @(posedge clk or negedge rst_n) begin
         if (~rst_n) begin
             time_step_pre <= 0;
         end
-		else if (time_step_pre == 'd29) begin
-            time_step_pre <= 'd29;
-        end
+		else if (time_step_pre == 'd29)
+			time_step_pre <= 'd29;
         else if (data_in_valid) begin
             time_step_pre <= time_step_pre + 1'b1;
         end
@@ -57,47 +56,41 @@ module binary_intermediate_1(
         end
     end
 	
-	wire [16*64-1:0] inter_w_data;
+	wire [30*8-1:0] alpha;
+	wire [30*8-1:0] beta;
 	wire [2:0] sel = block_sel;
-	attention_intermediate_1 attention_intermediate_1 (
+	
+	alpha_rom_3 alpha_rom_3 (
 	  .clka(clk),    // input wire clka
 	  .ena(data_in_valid),      // input wire ena
 	  .addra(sel),  // input wire [2 : 0] addra
-	  .douta(inter_w_data)  // output wire [1023 : 0] douta
+	  .douta(alpha)  // output wire [719 : 0] douta
+	);
+	
+	beta_rom_3 beta_rom_3 (
+	  .clka(clk),    // input wire clka
+	  .ena(data_in_valid),      // input wire ena
+	  .addra(sel),  // input wire [2 : 0] addra
+	  .douta(beta)  // output wire [719 : 0] douta
 	);
 	
 	genvar i;
-	integer j;
-
 	generate
-		for (i = 0; i < 64; i = i + 1) begin
-			wire [15:0] inter_xor_result = ~(inter_w_data[i*16 +: 16] ^ data_in);
+		for (i = 0; i < 16; i = i + 1) begin
+			wire signed [8-1:0] alpha_i = alpha[time_step*8 +: 8];
+			wire signed [8-1:0] beta_i = beta[time_step*8 +: 8];
 			
-			wire [4:0] inter_popcount_out = inter_xor_result[0] + inter_xor_result[1] + inter_xor_result[2] + inter_xor_result[3] + inter_xor_result[4] + inter_xor_result[5] + inter_xor_result[6] + inter_xor_result[7] + inter_xor_result[8] + inter_xor_result[9] + inter_xor_result[10] + inter_xor_result[11] + inter_xor_result[12] + inter_xor_result[13] + inter_xor_result[14] + inter_xor_result[15];
-
 //			always@(posedge clk or negedge rst_n) begin
 //				if (~rst_n) begin
-//					inter_popcount_out <= 0;
+//					data_out[i] <= 0;
 //				end
 //				else if (data_in_valid) begin
-//					for (j = 0; j < 16; j = j + 1) begin
-//						inter_popcount_out <= inter_popcount_out + inter_xor_result[j];
-//					end
+//					data_out[i] <= (data_in[i] * alpha_i + beta_i) > 0 ? 1 : 0;
 //				end
 //			end
-			
-			always@(posedge clk or negedge rst_n) begin
-				if (~rst_n) begin
-					data_out[i] <= 0;
-				end
-				else if (data_in_valid) begin
-					data_out[i] <= (2*inter_popcount_out-16) > 0 ? 1 : 0;
-				end
-			end
+			assign data_out[i] = (data_in[i] * alpha_i + beta_i) > 0 ? 1 : 0;
 		end
 	endgenerate
-	
-
 	
 	always@(posedge clk,negedge rst_n)begin
 		if(~rst_n)
@@ -114,6 +107,5 @@ module binary_intermediate_1(
 		else 
 			data_out_valid <= 0;
 	end
-	
 	
 endmodule

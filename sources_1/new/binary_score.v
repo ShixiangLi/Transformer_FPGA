@@ -54,21 +54,23 @@ module binary_score(
 	integer j_1;
 	generate
 		for (i_1 = 0; i_1 < 30; i_1 = i_1 + 1) begin
-			wire [3:0] score_xor_result_1 = key_in[i_1*16 +: 4] ^ query_in[3:0];
+			wire [3:0] score_xor_result_1 = ~(key_in[i_1*16 +: 4] ^ query_in[3:0]);
+			
+			wire [2:0] score_popcount_out_1 = score_xor_result_1[0] + score_xor_result_1[1] + score_xor_result_1[2] + score_xor_result_1[3];
 
 			// 计算POPCOUNT
-			reg [2:0] score_popcount_out_1;
-			
-			always@(posedge clk or negedge rst_n) begin
-				if (~rst_n) begin
-					score_popcount_out_1 <= 0;
-				end
-				else if (data_in_valid) begin
-					for (j_1 = 0; j_1 < 4; j_1 = j_1 + 1) begin
-						score_popcount_out_1 = score_popcount_out_1 + score_xor_result_1[j_1];
-					end
-				end
-			end
+//			reg [2:0] score_popcount_out_1;
+//			
+//			always@(posedge clk or negedge rst_n) begin
+//				if (~rst_n) begin
+//					score_popcount_out_1 <= 0;
+//				end
+//				else if (data_in_valid) begin
+//					for (j_1 = 0; j_1 < 4; j_1 = j_1 + 1) begin
+//						score_popcount_out_1 = score_popcount_out_1 + score_xor_result_1[j_1];
+//					end
+//				end
+//			end
 			
 			assign data_out_1[i_1] = ((2*score_popcount_out_1-threshold) > 0 && data_in_valid) ? 1 : 0;
 		end

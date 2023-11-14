@@ -70,20 +70,22 @@ module binary_intermediate_2(
 
 	generate
 		for (i = 0; i < 16; i = i + 1) begin
-			wire [63:0] inter_xor_result = inter_w_data[i*64 +: 64] ^ data_in;
+			wire [63:0] inter_xor_result = ~(inter_w_data[i*64 +: 64] ^ data_in);
 			
-			reg [4:0] inter_popcount_out;
-
-			always@(posedge clk or negedge rst_n) begin
-				if (~rst_n) begin
-					inter_popcount_out <= 0;
-				end
-				else if (data_in_valid) begin
-					for (j = 0; j < 64; j = j + 1) begin
-						inter_popcount_out <= inter_popcount_out + inter_xor_result[j];
-					end
-				end
-			end
+			wire [6:0] inter_popcount_out = inter_xor_result[0] + inter_xor_result[1] + inter_xor_result[2] + inter_xor_result[3] + inter_xor_result[4] + inter_xor_result[5] + inter_xor_result[6] + inter_xor_result[7] + inter_xor_result[8] + inter_xor_result[9] + inter_xor_result[10] + inter_xor_result[11] + inter_xor_result[12] + inter_xor_result[13] + inter_xor_result[14] + inter_xor_result[15] + inter_xor_result[16] + inter_xor_result[17] + inter_xor_result[18] + inter_xor_result[19] + inter_xor_result[20] + inter_xor_result[21] + inter_xor_result[22] + inter_xor_result[23] + inter_xor_result[24] + inter_xor_result[25] + inter_xor_result[26] + inter_xor_result[27] + inter_xor_result[28] + inter_xor_result[29] + inter_xor_result[30] + inter_xor_result[31] + inter_xor_result[32] + inter_xor_result[33] + inter_xor_result[34] + inter_xor_result[35] + inter_xor_result[36] + inter_xor_result[37] + inter_xor_result[38] + inter_xor_result[39] + inter_xor_result[40] + inter_xor_result[41] + inter_xor_result[42] + inter_xor_result[43] + inter_xor_result[44] + inter_xor_result[45] + inter_xor_result[46] + inter_xor_result[47] + inter_xor_result[48] + inter_xor_result[49] + inter_xor_result[50] + inter_xor_result[51] + inter_xor_result[52] + inter_xor_result[53] + inter_xor_result[54] + inter_xor_result[55] + inter_xor_result[56] + inter_xor_result[57] + inter_xor_result[58] + inter_xor_result[59] + inter_xor_result[60] + inter_xor_result[61] + inter_xor_result[62] + inter_xor_result[63];
+			
+//			reg [6:0] inter_popcount_out;
+//
+//			always@(posedge clk or negedge rst_n) begin
+//				if (~rst_n) begin
+//					inter_popcount_out <= 0;
+//				end
+//				else if (data_in_valid) begin
+//					for (j = 0; j < 64; j = j + 1) begin
+//						inter_popcount_out <= inter_popcount_out + inter_xor_result[j];
+//					end
+//				end
+//			end
 			
 			always@(posedge clk or negedge rst_n) begin
 				if (~rst_n) begin
