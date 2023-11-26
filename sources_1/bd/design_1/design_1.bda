@@ -21,20 +21,20 @@
   <key id="VT" for="node" attr.name="vert_type" attr.type="string"/>
   <graph id="G" edgedefault="undirected" parse.nodeids="canonical" parse.edgeids="canonical" parse.order="nodesfirst">
     <node id="n0">
-      <data key="BA">0x0080010000</data>
+      <data key="BA">0x0080000000</data>
       <data key="BP">C_S00_AXI_BASEADDR</data>
-      <data key="HA">0x008001FFFF</data>
+      <data key="HA">0x008000FFFF</data>
       <data key="HP">C_S00_AXI_HIGHADDR</data>
       <data key="MA">Data</data>
       <data key="MX">/zynq_ultra_ps_e_0</data>
       <data key="MI">M_AXI_HPM0_LPD</data>
-      <data key="MS">SEG_PL_PS_IP_0_S00_AXI_reg</data>
+      <data key="MS">SEG_PS_PL_0_S00_AXI_reg</data>
       <data key="MV">xilinx.com:ip:zynq_ultra_ps_e:3.4</data>
       <data key="TM">both</data>
-      <data key="SX">/PL_PS_IP_0</data>
+      <data key="SX">/PS_PL_0</data>
       <data key="SI">S00_AXI</data>
       <data key="SS">S00_AXI_reg</data>
-      <data key="SV">xilinx.com:user:PL_PS_IP:1.0</data>
+      <data key="SV">xilinx.com:user:PS_PL:1.0</data>
       <data key="TU">register</data>
       <data key="VT">AC</data>
     </node>
@@ -52,30 +52,9 @@
       <data key="VM">design_1</data>
       <data key="VT">VR</data>
     </node>
-    <node id="n4">
-      <data key="BA">0x0080000000</data>
-      <data key="BP">C_S00_AXI_BASEADDR</data>
-      <data key="HA">0x008000FFFF</data>
-      <data key="HP">C_S00_AXI_HIGHADDR</data>
-      <data key="MA">Data</data>
-      <data key="MX">/zynq_ultra_ps_e_0</data>
-      <data key="MI">M_AXI_HPM0_LPD</data>
-      <data key="MS">SEG_PS_PL_IP_0_S00_AXI_reg</data>
-      <data key="MV">xilinx.com:ip:zynq_ultra_ps_e:3.4</data>
-      <data key="TM">both</data>
-      <data key="SX">/PS_PL_IP_0</data>
-      <data key="SI">S00_AXI</data>
-      <data key="SS">S00_AXI_reg</data>
-      <data key="SV">xilinx.com:user:PS_PL_IP:1.0</data>
-      <data key="TU">register</data>
-      <data key="VT">AC</data>
-    </node>
     <edge id="e0" source="n2" target="n3"/>
     <edge id="e1" source="n3" target="n1"/>
     <edge id="e2" source="n0" target="n1">
-      <data key="EH">2</data>
-    </edge>
-    <edge id="e3" source="n4" target="n1">
       <data key="EH">2</data>
     </edge>
   </graph>

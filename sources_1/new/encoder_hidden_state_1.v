@@ -34,7 +34,7 @@ module encoder_hidden_state_1(
     );
 	
     reg [4:0] time_step_pre;
-    reg [4:0] time_step; // 添加�?个寄存器用于延迟
+    reg [4:0] time_step; // 添加一个寄存器用于延迟
 	
     always @(posedge clk or negedge rst_n) begin
         if (~rst_n) begin

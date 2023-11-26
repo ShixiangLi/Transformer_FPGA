@@ -39,17 +39,14 @@ module encoder(
     reg [4:0] ln_time_step_1_pre;
     reg [4:0] ln_time_step_1;
 	
-	always @(posedge clk or negedge rst_n) begin
-		if (~rst_n) begin
-			ln_time_step_1_pre <= 0;
-		end
-		else begin
-			if (data_in_valid) begin
-				ln_time_step_1_pre <= ln_time_step_1_pre + 1'b1;
-			end
-		end
-	end
-
+    always @(posedge clk or negedge rst_n) begin
+        if (~rst_n) begin
+            ln_time_step_1_pre <= 0;
+        end
+        else if (data_in_valid) begin
+            ln_time_step_1_pre <= ln_time_step_1_pre + 1'b1;
+        end
+    end
 	
     always @(posedge clk or negedge rst_n) begin
         if (~rst_n) begin
