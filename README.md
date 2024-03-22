@@ -1,5 +1,3 @@
-### ./verilog/ip_res 是AXI-LITE IP核
-
 # Transformer_FPGA
 Transformer FPGA Accelerator
 
